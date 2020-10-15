@@ -4,22 +4,24 @@ import re,string,sys
 fulllist_glob = []
 fullfunction_glob = []
 
-
 def banner():
    print "-" * 70
    print """
- _    _ _     _      __  __       _____   _____ 
+ _    _ _     _      __  __       _____   _____
 | |  | (_)   | |    |  \/  |     |  __ \ / ____|
-| |__| |_  __| | ___| \  / |_   _| |__) | (___  
-|  __  | |/ _` |/ _ \ |\/| | | | |  ___/ \___ \ 
+| |__| |_  __| | ___| \  / |_   _| |__) | (___
+|  __  | |/ _` |/ _ \ |\/| | | | |  ___/ \___ \\
 | |  | | | (_| |  __/ |  | | |_| | |     ____) |
-|_|  |_|_|\__,_|\___|_|  |_|\__, |_|    |_____/ 
-          		     __/ |        
-  		            |___/          
+|_|  |_|_|\__,_|\___|_|  |_|\__, |_|    |_____/
+              		     __/ |
+      		            |___/
 
-[-]PowerShell Encoding Tool
-[-]Written by Peter Kim
-"""
+    [-] PowerShell Encoding Tool
+    [-] Written by Peter Kim
+    [-] Modified by Steven Franks
+    """
+   print "-" * 70
+
 try:
    source = sys.argv[1]
    destination = sys.argv[2]
@@ -28,16 +30,16 @@ try:
 
 except IndexError:
    banner()
-   print "[-]Usage: python hidemyps.py <source file> <output file>"
-   print "[-]Example: python hidemyps.py mimikatz.ps1 hidemimkatz.ps1"
+   print "[-] Usage: python hidemyps.py <source file> <output file>"
+   print "[-] Example: python hidemyps.py mimikatz.ps1 hidemimkatz.ps1"
    sys.exit()
 
 banner()
-print "[*] Starting Encoding PowerShell Script"
-print "[*] Modifying variables, function names, strings, removing comments"
+print "\n[!] Starting encoding.."
+print "[*] Modifying variables, function names, strings and removing comments."
 full = []
 
-#Taking every function name and variable and running ROT13 
+#Taking every function name and variable and running ROT13
 #TODO: Create full list of variables to ignore
 
 def rot(x):
@@ -69,8 +71,8 @@ def cleaner(x):
 #For each line identify function names and send to ROT13
 
 for x in f:
-   xstrip = x.strip()  
- 
+   xstrip = x.strip()
+
    if (xstrip.lower().startswith("function ")) and ("unction local:" not in x.lower()):
       func = xstrip.split(' ',1)
       #print func[1]
@@ -83,10 +85,10 @@ for x in f:
       x = x.replace(func[1],func_rot)
    x = rot(x)
    full.append(x)
-   
+
 fulllist_glob = set(fulllist_glob)
 fullfunction_glob = set(fullfunction_glob)
-      
+
 #TODO: Create full list of PowerShell default functions to put into whitelist
 
 import base64
@@ -98,7 +100,7 @@ for q in full:
       comment = 1
       if q.strip() == "#>":
          comment = 0
-      continue 
+      continue
    if "#" in q: #Removing comments from the PowerShell scripts
       qs = q.split("#",1)
       if '"' in qs[1]:
@@ -110,7 +112,7 @@ for q in full:
       w = w[1:]
       w = w.strip()
       if (" -"+w+" " in q) and ("Add-Member" not in q):
-         q = q.replace(" -"+w+" "," -"+w.encode('rot13')+" ") 
+         q = q.replace(" -"+w+" "," -"+w.encode('rot13')+" ")
    if (".tostring" in q.lower()) or ("`" in q) or ("+" in q) or ("test-memoryrange" in q.lower()) or ("get-memoryprocaddress" in q.lower()):
       pass
    else:
@@ -136,5 +138,5 @@ for q in full:
                firstpart, secondpart = qft[:len(qft)/2], qft[len(qft)/2:]
                q = q.replace("'"+qft+"'","('"+firstpart+"'+'"+secondpart+"')")
    wr.write(q )
-   
-print "[*] Encoding Finished"
+
+print "[!] Encoding finished!\n"
