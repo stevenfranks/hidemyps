@@ -1,6 +1,12 @@
 # hidemyps
 This is a custom PowerShell Obfuscator  used in The Hacker Playbook 3 (THP3).  Please refer to THP3 for further details.
 
+# Usage
+
+`python hidemyps.py <source file> <output file>`
+
+Example: `python hidemyps.py mimikatz.ps1 hidemimkatz.ps1`
+
 # Disclaimer
 This repository is for research purposes only, the use of this code is your responsibility.
 
