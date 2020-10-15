@@ -1,4 +1,8 @@
+
 # hidemyps
+
+<img src="images/header-image.png" width=400px />
+
 This is a custom PowerShell Obfuscator  used in The Hacker Playbook 3 (THP3).  Please refer to THP3 for further details.
 
 # Usage
